@@ -7,7 +7,9 @@
     :big-int   98
     :float     99
     :atom      100
-    :string    107})
+    :nil       106
+    :string    107
+    :list      108})
 
 (defn data->bytes [data]
   (lazy-seq (cons (bit-and 255 data) (data->bytes (bit-shift-right data 8)))))
@@ -20,7 +22,10 @@
     (extract-bytes size 2)))
 
 (defn coerce [kind & args]
-  (map byte (concat [*version* (*types* kind)] (apply concat args))))
+  (let [stuff (concat [*version* (*types* kind)] (apply concat args))]
+    (map byte stuff)))
+
+(declare encode-without-magic)
 
 (defmulti encode #(type %))
 
@@ -41,6 +46,13 @@
   (let [bytes (.getBytes (str sym))]
     (coerce :atom (twoByteLength bytes) bytes)))
 
-(defmethod encode :default [bytes]
-  (coerce :string (twoByteLength bytes) bytes))
+(defmethod encode clojure.lang.PersistentList [coll]
+  (let [size (count coll)]
+    (coerce :list (extract-bytes size 4) (apply concat (map encode-without-magic coll)) (encode-without-magic nil))))
+
+(defmethod encode nil [_]
+  (coerce :nil))
+
+(defn encode-without-magic [o]
+  (rest (encode o)))
 

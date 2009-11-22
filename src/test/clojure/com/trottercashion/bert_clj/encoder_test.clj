@@ -24,3 +24,11 @@
   (let [expected (binary 131 100 0 7 116 114 111 116 116 101 114)]
     (is (= (encoder/encode 'trotter) expected))))
 
+(deftest should-encode-nil
+  (let [expected (binary 131 106)]
+    (is (= (encoder/encode nil) expected))))
+
+(deftest should-encode-lists
+  (let [expected (binary 131 108 0 0 0 3 107 0 1 97 107 0 1 98 107 0 1 99 106)]
+    (is (= (encoder/encode '("a" "b" "c")) expected))))
+
