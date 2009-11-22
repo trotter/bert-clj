@@ -3,18 +3,21 @@
 (def *version* (byte 131))
 
 (def *types* 
-  { java.lang.String 107
-    java.lang.Double 99
-    :small-int       97})
+  { :small-int 97
+    :big-int   98
+    :float     99
+    :atom      100
+    :string    107})
 
-(defn bytes [& args]
-  (map #(.toByte %) args))
+(defn data->bytes [data]
+  (lazy-seq (cons (bit-and 255 data) (data->bytes (bit-shift-right data 8)))))
+
+(defn extract-bytes [data length]
+  (reverse (take length (data->bytes data))))
 
 (defn twoByteLength [bytes]
-  (let [size (count bytes)
-        second-byte (bit-and 255 size)
-        first-byte (bit-shift-right size 8)]
-    [first-byte second-byte]))
+  (let [size (count bytes)]
+    (extract-bytes size 2)))
 
 (defn coerce [kind & args]
   (map byte (concat [*version* (*types* kind)] (apply concat args))))
@@ -23,14 +26,21 @@
 
 (defmethod encode java.lang.String [string]
   (let [bytes (.getBytes string)]
-    (coerce java.lang.String (twoByteLength bytes) bytes)))
+    (coerce :string (twoByteLength bytes) bytes)))
 
 (defmethod encode java.lang.Double [f]
   (let [bytes (.getBytes (format "%.20e" 5.5))]
-    (coerce java.lang.Double bytes)))
+    (coerce :float bytes)))
 
 (defmethod encode java.lang.Integer [i]
   (if (< i 256)
-    (coerce :small-int [i])))
+    (coerce :small-int (extract-bytes i 1))
+    (coerce :big-int (extract-bytes i 4))))
 
+(defmethod encode clojure.lang.Symbol [sym]
+  (let [bytes (.getBytes (str sym))]
+    (coerce :atom (twoByteLength bytes) bytes)))
+
+(defmethod encode :default [bytes]
+  (coerce :string (twoByteLength bytes) bytes))
 
