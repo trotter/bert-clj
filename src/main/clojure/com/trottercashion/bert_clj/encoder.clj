@@ -1,15 +1,26 @@
 (ns com.trottercashion.bert-clj.encoder)
 
+(declare encode-without-magic)
+
 (def *version* (byte 131))
 
-(def *types* 
+(def *etf-types* 
   { :small-int 97
     :big-int   98
     :float     99
     :atom      100
     :nil       106
     :string    107
-    :list      108})
+    :list      108
+    :binary    109})
+
+(def *type-mappings*
+  { java.lang.String            :string
+   java.lang.Double            :float
+   java.lang.Integer           :integer
+   clojure.lang.Symbol         :atom
+   clojure.lang.PersistentList :list
+   clojure.lang.LazySeq        :list})
 
 (defn data->bytes [data]
   (lazy-seq (cons (bit-and 255 data) (data->bytes (bit-shift-right data 8)))))
@@ -22,33 +33,40 @@
     (extract-bytes size 2)))
 
 (defn coerce [kind & args]
-  (let [stuff (concat [*version* (*types* kind)] (apply concat args))]
+  (let [stuff (concat [*version* (*etf-types* kind)] (apply concat args))]
     (map byte stuff)))
 
-(declare encode-without-magic)
+(defn encode-list [coll]
+  (let [size (count coll)]
+    (coerce :list (extract-bytes size 4) (apply concat (map encode-without-magic coll)) (encode-without-magic nil))))
 
-(defmulti encode #(type %))
+(defn encode-binary-list [coll]
+  (let [size (count coll)]
+    (coerce :binary (extract-bytes size 4) coll)))
 
-(defmethod encode java.lang.String [string]
+(defmulti encode #(*type-mappings* (type %)))
+
+(defmethod encode :string [string]
   (let [bytes (.getBytes string)]
     (coerce :string (twoByteLength bytes) bytes)))
 
-(defmethod encode java.lang.Double [f]
+(defmethod encode :float [f]
   (let [bytes (.getBytes (format "%.20e" 5.5))]
     (coerce :float bytes)))
 
-(defmethod encode java.lang.Integer [i]
+(defmethod encode :integer [i]
   (if (< i 256)
     (coerce :small-int (extract-bytes i 1))
     (coerce :big-int (extract-bytes i 4))))
 
-(defmethod encode clojure.lang.Symbol [sym]
+(defmethod encode :atom [sym]
   (let [bytes (.getBytes (str sym))]
     (coerce :atom (twoByteLength bytes) bytes)))
 
-(defmethod encode clojure.lang.PersistentList [coll]
-  (let [size (count coll)]
-    (coerce :list (extract-bytes size 4) (apply concat (map encode-without-magic coll)) (encode-without-magic nil))))
+(defmethod encode :list [coll]
+  (if (every? #(= java.lang.Byte (type %)) coll)
+    (encode-binary-list coll)
+    (encode-list coll)))
 
 (defmethod encode nil [_]
   (coerce :nil))

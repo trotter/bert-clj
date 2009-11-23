@@ -32,3 +32,10 @@
   (let [expected (binary 131 108 0 0 0 3 107 0 1 97 107 0 1 98 107 0 1 99 106)]
     (is (= (encoder/encode '("a" "b" "c")) expected))))
 
+(deftest should-encode-lists-when-lazy
+  (let [expected (binary 131 108 0 0 0 3 107 0 1 97 107 0 1 98 107 0 1 99 106)]
+    (is (= (encoder/encode (lazy-seq '("a" "b" "c"))) expected))))
+
+(deftest should-encode-binary-lists
+  (let [expected (binary 131 109 0 0 0 3 1 2 3)]
+    (is (= (encoder/encode (binary 1 2 3)) expected))))
