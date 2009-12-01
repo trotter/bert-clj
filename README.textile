@@ -1,0 +1,5 @@
+bert-clj is an implementation of "mojombo's bert":http://github.com/mojombo/bert/ in clojure. It is currently not yet ready for use.
+
+h2. Author
+
+Trotter Cashion (cashion@gmail.com)
