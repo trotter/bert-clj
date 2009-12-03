@@ -24,9 +24,13 @@
   (let [expected (binary 131 98 255 255 255 255)]
     (is (= (encoder/encode -1) expected))))
 
-(deftest should-encode-atoms
+(deftest should-encode-symbols-atoms
   (let [expected (binary 131 100 0 7 116 114 111 116 116 101 114)]
     (is (= (encoder/encode 'trotter) expected))))
+
+(deftest should-encode-keywords-as-atoms
+  (let [expected (binary 131 100 0 7 116 114 111 116 116 101 114)]
+    (is (= (encoder/encode :trotter) expected))))
 
 (deftest should-encode-small-tuple
   (let [expected (binary 131 104 2 100 0 5 104 101 108 108 111 100 0 5 119 111 114 108 100)]

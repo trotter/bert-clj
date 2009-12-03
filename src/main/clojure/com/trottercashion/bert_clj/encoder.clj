@@ -25,6 +25,7 @@
     java.lang.Double                    :float
     java.lang.Integer                   :integer
     clojure.lang.Symbol                 :atom
+    clojure.lang.Keyword                :atom
     clojure.lang.PersistentList         :list
     clojure.lang.LazySeq                :list
     clojure.lang.LazilyPersistentVector :tuple
@@ -73,7 +74,8 @@
     (coerce :big-int (extract-bytes i 4))))
 
 (defmethod encode :atom [sym]
-  (let [bytes (.getBytes (str sym))]
+  (let [string (str sym)
+        bytes (.getBytes (if (keyword? sym) (.substring string 1) string))]
     (coerce :atom (twoByteLength bytes) bytes)))
 
 (defmethod encode :list [coll]
