@@ -1,10 +1,12 @@
-(ns com.trottercashion.bert-clj.encoder)
+(ns com.trottercashion.bert-clj.encoder
+  (:require
+   [clojure.contrib.math :as math]))
 
 (declare encode-without-magic)
 
 (def *version* (byte 131))
 
-(def *etf-types* 
+(def *etf-types*
   { :small-int 97
     :big-int   98
     :float     99
@@ -12,21 +14,28 @@
     :nil       106
     :string    107
     :list      108
-    :binary    109})
+    :binary    109
+    :small-bignum 110
+    :large-bignum 111})
 
 (def *type-mappings*
   { java.lang.String            :string
-   java.lang.Double            :float
-   java.lang.Integer           :integer
-   clojure.lang.Symbol         :atom
-   clojure.lang.PersistentList :list
-   clojure.lang.LazySeq        :list})
+    java.lang.Double            :float
+    java.lang.Integer           :integer
+    clojure.lang.Symbol         :atom
+    clojure.lang.PersistentList :list
+    clojure.lang.LazySeq        :list
+    java.lang.Long              :bignum
+    java.math.BigInteger        :bignum
+    nil                         :nil})
 
 (defn data->bytes [data]
-  (lazy-seq (cons (bit-and 255 data) (data->bytes (bit-shift-right data 8)))))
+  (if (= 0 data)
+    nil
+    (lazy-seq (cons (bit-and 255 data) (data->bytes (bit-shift-right data 8))))))
 
 (defn extract-bytes [data length]
-  (reverse (take length (data->bytes data))))
+  (reverse (take length (concat (data->bytes data) (repeat 0)))))
 
 (defn twoByteLength [bytes]
   (let [size (count bytes)]
@@ -55,7 +64,7 @@
     (coerce :float bytes)))
 
 (defmethod encode :integer [i]
-  (if (< i 256)
+  (if (and (< 0 i) (< i 256))
     (coerce :small-int (extract-bytes i 1))
     (coerce :big-int (extract-bytes i 4))))
 
@@ -68,8 +77,17 @@
     (encode-binary-list coll)
     (encode-list coll)))
 
-(defmethod encode nil [_]
+(defmethod encode :nil [_]
   (coerce :nil))
+
+(defmethod encode :bignum [i]
+  (let [sign (if (< i 0) 1 0)
+        ;; need the abs because data->bytes goes nuts otherwise
+        bytes (data->bytes (math/abs i))
+        size (count bytes)]
+    (if (> size 255)
+      (coerce :large-bignum (extract-bytes size 4) (extract-bytes sign 1) bytes)
+      (coerce :small-bignum (extract-bytes size 1) (extract-bytes sign 1) bytes))))
 
 (defn encode-without-magic [o]
   (rest (encode o)))
