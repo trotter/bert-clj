@@ -11,6 +11,8 @@
     :big-int   98
     :float     99
     :atom      100
+    :small-tuple 104
+    :large-tuple 105
     :nil       106
     :string    107
     :list      108
@@ -25,6 +27,8 @@
     clojure.lang.Symbol         :atom
     clojure.lang.PersistentList :list
     clojure.lang.LazySeq        :list
+    clojure.lang.LazilyPersistentVector :tuple
+    clojure.lang.PersistentVector :tuple
     java.lang.Long              :bignum
     java.math.BigInteger        :bignum
     nil                         :nil})
@@ -76,6 +80,12 @@
   (if (every? #(= java.lang.Byte (type %)) coll)
     (encode-binary-list coll)
     (encode-list coll)))
+
+(defmethod encode :tuple [coll]
+  (let [size (count coll)]
+    (if (> size 255)
+      (coerce :large-tuple (extract-bytes size 4) (apply concat (map encode-without-magic coll)))
+      (coerce :small-tuple (extract-bytes size 1) (apply concat (map encode-without-magic coll))))))
 
 (defmethod encode :nil [_]
   (coerce :nil))

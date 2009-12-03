@@ -28,6 +28,14 @@
   (let [expected (binary 131 100 0 7 116 114 111 116 116 101 114)]
     (is (= (encoder/encode 'trotter) expected))))
 
+(deftest should-encode-small-tuple
+  (let [expected (binary 131 104 2 100 0 5 104 101 108 108 111 100 0 5 119 111 114 108 100)]
+    (is (= (encoder/encode (vector 'hello 'world)) expected))))
+
+(deftest should-encode-large-tuple
+  (let [expected (concat (binary 131 105 0 0 1 0) (apply concat (take 256 (repeat '(97 2)))))]
+    (is (= (encoder/encode (vec (take 256 (repeat 2)))) expected))))
+
 (deftest should-encode-nil
   (let [expected (binary 131 106)]
     (is (= (encoder/encode nil) expected))))
