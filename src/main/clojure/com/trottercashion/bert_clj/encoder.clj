@@ -7,31 +7,31 @@
 (def *version* (byte 131))
 
 (def *etf-types*
-  { :small-int 97
-    :big-int   98
-    :float     99
-    :atom      100
-    :small-tuple 104
-    :large-tuple 105
-    :nil       106
-    :string    107
-    :list      108
-    :binary    109
+  { :small-int    97
+    :big-int      98
+    :float        99
+    :atom         100
+    :small-tuple  104
+    :large-tuple  105
+    :nil          106
+    :string       107
+    :list         108
+    :binary       109
     :small-bignum 110
     :large-bignum 111})
 
 (def *type-mappings*
-  { java.lang.String            :string
-    java.lang.Double            :float
-    java.lang.Integer           :integer
-    clojure.lang.Symbol         :atom
-    clojure.lang.PersistentList :list
-    clojure.lang.LazySeq        :list
+  { java.lang.String                    :string
+    java.lang.Double                    :float
+    java.lang.Integer                   :integer
+    clojure.lang.Symbol                 :atom
+    clojure.lang.PersistentList         :list
+    clojure.lang.LazySeq                :list
     clojure.lang.LazilyPersistentVector :tuple
-    clojure.lang.PersistentVector :tuple
-    java.lang.Long              :bignum
-    java.math.BigInteger        :bignum
-    nil                         :nil})
+    clojure.lang.PersistentVector       :tuple
+    java.lang.Long                      :bignum
+    java.math.BigInteger                :bignum
+    nil                                 :nil})
 
 (defn data->bytes [data]
   (if (= 0 data)
