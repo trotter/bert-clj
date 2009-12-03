@@ -74,8 +74,7 @@
     (coerce :big-int (extract-bytes i 4))))
 
 (defmethod encode :atom [sym]
-  (let [string (str sym)
-        bytes (.getBytes (if (keyword? sym) (.substring string 1) string))]
+  (let [bytes (.getBytes (name sym))]
     (coerce :atom (twoByteLength bytes) bytes)))
 
 (defmethod encode :list [coll]
