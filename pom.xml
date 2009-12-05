@@ -7,7 +7,7 @@
   <version>1.0</version>
   <packaging>jar</packaging>
   <name>BERT Clojure</name>
-  <description>Mojomob's BERT in Clojure</description>
+  <description>Mojombo's BERT in Clojure</description>
   <inceptionYear>2009</inceptionYear>
 
   <developers>
