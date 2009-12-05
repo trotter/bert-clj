@@ -4,7 +4,14 @@
   { nil               :nil
     java.lang.Boolean :boolean})
 
-(defmulti convert #(*type-mappings* (type %)))
+(def *type-finders*
+  { clojure.lang.IPersistentMap :dictionary})
+
+(defn conversion-type [obj]
+  (or (*type-mappings* (type obj))
+      (last (first (filter #(instance? (first %) obj) *type-finders*)))))
+
+(defmulti convert #(conversion-type %))
 
 (defmethod convert :nil [_]
   ['bert 'nil])
@@ -12,3 +19,6 @@
 (defmethod convert :boolean [bool]
   (let [sym (if bool 'true 'false)]
     ['bert sym]))
+
+(defmethod convert :dictionary [dict]
+  (concat ['bert 'dict] (interleave (keys dict) (vals dict))))
