@@ -3,5 +3,9 @@
   (:require [com.trottercashion.bert-clj.converter :as converter]))
 
 (deftest should-convert-nil
-  (let [expected {'bert, nil}]
+  (let [expected {'bert, 'nil}]
     (is (= (converter/convert nil) expected))))
+
+(deftest should-convert-boolean
+  (is (= (converter/convert true) {'bert, 'true}))
+  (is (= (converter/convert false) {'bert, 'false})))
