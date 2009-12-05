@@ -21,18 +21,18 @@
     :large-bignum 111})
 
 (def *type-mappings*
-  { java.lang.String                    :string
-    java.lang.Double                    :float
-    java.lang.Integer                   :integer
-    clojure.lang.Symbol                 :atom
-    clojure.lang.Keyword                :atom
-    clojure.lang.PersistentList         :list
-    clojure.lang.LazySeq                :list
-    clojure.lang.LazilyPersistentVector :tuple
-    clojure.lang.PersistentVector       :tuple
-    java.lang.Long                      :bignum
-    java.math.BigInteger                :bignum
-    nil                                 :nil})
+  { java.lang.String                      :string
+    java.lang.Double                      :float
+    java.lang.Integer                     :integer
+    clojure.lang.Symbol                   :atom
+    clojure.lang.Keyword                  :atom
+    clojure.lang.PersistentList           :list
+    clojure.lang.LazySeq                  :list
+    clojure.lang.LazilyPersistentVector   :tuple
+    clojure.lang.PersistentVector         :tuple
+    java.lang.Long                        :bignum
+    java.math.BigInteger                  :bignum
+    clojure.lang.PersistentList$EmptyList :nil})
 
 (defn data->bytes [data]
   (if (= 0 data)
@@ -52,7 +52,7 @@
 
 (defn encode-list [coll]
   (let [size (count coll)]
-    (coerce :list (extract-bytes size 4) (apply concat (map encode-without-magic coll)) (encode-without-magic nil))))
+    (coerce :list (extract-bytes size 4) (apply concat (map encode-without-magic coll)) (encode-without-magic '()))))
 
 (defn encode-binary-list [coll]
   (let [size (count coll)]

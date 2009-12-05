@@ -40,9 +40,9 @@
   (let [expected (concat (binary 131 105 0 0 1 0) (apply concat (take 256 (repeat '(97 2)))))]
     (is (= (encoder/encode (vec (take 256 (repeat 2)))) expected))))
 
-(deftest should-encode-nil
+(deftest should-encode-empty-list
   (let [expected (binary 131 106)]
-    (is (= (encoder/encode nil) expected))))
+    (is (= (encoder/encode '()) expected))))
 
 (deftest should-encode-lists
   (let [expected (binary 131 108 0 0 0 3 107 0 1 97 107 0 1 98 107 0 1 99 106)]
