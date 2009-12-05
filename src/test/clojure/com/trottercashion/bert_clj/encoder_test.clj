@@ -32,6 +32,12 @@
   (let [expected (binary 131 100 0 7 116 114 111 116 116 101 114)]
     (is (= (encoder/encode :trotter) expected))))
 
+(deftest should-prevent-bert-from-being-at-front-of-tuple
+  (try (encoder/encode (vector 'bert 'hi 'there))
+       (is (= "failed throw" ""))
+       (catch Exception _
+         (is (= "threw error" "threw error")))))
+
 (deftest should-encode-small-tuple
   (let [expected (binary 131 104 2 100 0 5 104 101 108 108 111 100 0 5 119 111 114 108 100)]
     (is (= (encoder/encode (vector 'hello 'world)) expected))))

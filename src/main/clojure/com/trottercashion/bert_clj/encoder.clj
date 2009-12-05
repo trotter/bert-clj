@@ -83,7 +83,10 @@
     (encode-list coll)))
 
 (defmethod encode :tuple [coll]
-  (let [size (count coll)]
+  (let [start (try (name (first coll)) (catch Exception _ ""))
+        size (count coll)]
+    (if (= "bert" start)
+      (throw (Exception. "Cannot start a tuple with 'bert'")))
     (if (> size 255)
       (coerce :large-tuple (extract-bytes size 4) (apply concat (map encode-without-magic coll)))
       (coerce :small-tuple (extract-bytes size 1) (apply concat (map encode-without-magic coll))))))
