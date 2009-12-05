@@ -7,8 +7,8 @@
 (defmulti convert #(*type-mappings* (type %)))
 
 (defmethod convert :nil [_]
-  {'bert, 'nil})
+  ['bert 'nil])
 
 (defmethod convert :boolean [bool]
   (let [sym (if bool 'true 'false)]
-    {'bert, sym}))
+    ['bert sym]))
