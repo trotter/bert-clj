@@ -21,4 +21,5 @@
     ['bert sym]))
 
 (defmethod convert :dictionary [dict]
-  (concat ['bert 'dict] (interleave (keys dict) (vals dict))))
+  (vector 'bert 'dict (map vec dict)))
+

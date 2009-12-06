@@ -11,5 +11,5 @@
   (is (= (converter/convert false) ['bert 'false])))
 
 (deftest should-convert-map
-  (let [expected ['bert 'dict "hello" "mom" :nine 7]]
+  (let [expected ['bert 'dict '(["hello" "mom"] [:nine 7])]]
     (is (= (converter/convert {"hello" "mom" :nine 7}) expected))))
