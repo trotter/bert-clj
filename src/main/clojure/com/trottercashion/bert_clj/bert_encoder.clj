@@ -1,4 +1,4 @@
-(ns com.trottercashion.bert-clj.converter)
+(ns com.trottercashion.bert-clj.bert-encoder)
 
 (def *type-mappings*
   { nil               :nil
@@ -7,19 +7,19 @@
 (def *type-finders*
   { clojure.lang.IPersistentMap :dictionary})
 
-(defn conversion-type [obj]
+(defn encoding-type [obj]
   (or (*type-mappings* (type obj))
       (last (first (filter #(instance? (first %) obj) *type-finders*)))))
 
-(defmulti convert #(conversion-type %))
+(defmulti encode #(encoding-type %))
 
-(defmethod convert :nil [_]
+(defmethod encode :nil [_]
   ['bert 'nil])
 
-(defmethod convert :boolean [bool]
+(defmethod encode :boolean [bool]
   (let [sym (if bool 'true 'false)]
     ['bert sym]))
 
-(defmethod convert :dictionary [dict]
+(defmethod encode :dictionary [dict]
   (vector 'bert 'dict (map vec dict)))
 

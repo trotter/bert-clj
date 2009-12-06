@@ -1,6 +1,6 @@
-(ns com.trottercashion.bert-clj.encoder-test
+(ns com.trottercashion.bert-clj.etf-encoder-test
   (:use clojure.contrib.test-is)
-  (:require [com.trottercashion.bert-clj.encoder :as encoder]))
+  (:require [com.trottercashion.bert-clj.etf-encoder :as encoder]))
 
 (defn binary [& args] (map byte args))
 

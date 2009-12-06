@@ -1,4 +1,4 @@
-(ns com.trottercashion.bert-clj.encoder
+(ns com.trottercashion.bert-clj.etf-encoder
   (:require
    [clojure.contrib.math :as math]))
 
