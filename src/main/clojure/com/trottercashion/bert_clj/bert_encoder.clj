@@ -23,3 +23,4 @@
 (defmethod encode :dictionary [dict]
   (vector 'bert 'dict (map vec dict)))
 
+(defmethod encode :default [obj] obj)
