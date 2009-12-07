@@ -13,3 +13,8 @@
 (deftest should-encode-map
   (let [expected ['bert 'dict '(["hello" "mom"] [:nine 7])]]
     (is (= (encoder/encode {"hello" "mom" :nine 7}) expected))))
+
+(deftest should-encode-time
+  (let [milliseconds 12345678912345
+        expected ['bert 'dict 12345 678912 345000]]
+    (is (= (encoder/encode (java.util.Date. milliseconds)) expected))))
