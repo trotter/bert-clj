@@ -14,3 +14,6 @@
 (deftest should-decode-float
   (let [val 4000.0003]
     (is (> 0.001 (math/abs (- (decoder/decode (encoder/encode val)) val))))))
+
+(deftest should-decode-small-integer
+  (test-round-trip 234))

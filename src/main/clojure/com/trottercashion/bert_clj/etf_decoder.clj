@@ -1,6 +1,11 @@
 (ns com.trottercashion.bert-clj.etf-decoder
   (:use com.trottercashion.bert-clj.utility))
 
+(defn unsign-int [i]
+  (if (< i 0)
+    (+ 256 i)
+    i))
+
 (defn make-byte-array [coll]
   (let [array (make-array Byte/TYPE (count coll))]
     (doseq [[idx val] (zipmap (iterate inc 0) coll)]
@@ -8,7 +13,7 @@
     array))
 
 (defn bytes->data [data]
-  (reduce #(+ (bit-shift-left %1 8) %2) data))
+  (reduce #(+ (bit-shift-left %1 8) (unsign-int %2)) 0 data))
 
 (defmulti decode
   (fn [coll]
@@ -24,3 +29,7 @@
 (defmethod decode :float [coll]
   (let [[magic type & data] coll]
     (Float. (String. (make-byte-array (take 26 data))))))
+
+(defmethod decode :small-int [coll]
+  (let [[magic type & data] coll]
+    (bytes->data data)))
