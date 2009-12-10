@@ -1,24 +1,9 @@
 (ns com.trottercashion.bert-clj.etf-encoder
+  (:use com.trottercashion.bert-clj.utility)
   (:require [clojure.contrib.math :as math]
             [com.trottercashion.bert-clj.bert :as bert]))
 
 (declare encode-without-magic)
-
-(def *version* (byte 131))
-
-(def *etf-types*
-  { :small-int    97
-    :big-int      98
-    :float        99
-    :atom         100
-    :small-tuple  104
-    :large-tuple  105
-    :nil          106
-    :string       107
-    :list         108
-    :binary       109
-    :small-bignum 110
-    :large-bignum 111})
 
 (def *type-mappings*
   { java.lang.String                      :string

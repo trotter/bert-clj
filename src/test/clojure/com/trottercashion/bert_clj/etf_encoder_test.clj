@@ -1,8 +1,7 @@
 (ns com.trottercashion.bert-clj.etf-encoder-test
-  (:use clojure.contrib.test-is)
+  (:use clojure.contrib.test-is
+        com.trottercashion.bert-clj.test-helper)
   (:require [com.trottercashion.bert-clj.etf-encoder :as encoder]))
-
-(defn binary [& args] (map byte args))
 
 (deftest should-encode-string
   (let [expected (binary 131 107 0 5 104 101 108 108 111)]
