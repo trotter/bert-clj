@@ -20,3 +20,7 @@
          length           (bytes->data (take 2 data))
          bytes            (take length (drop 2 data))]
     (String. (make-byte-array bytes))))
+
+(defmethod decode :float [coll]
+  (let [[magic type & data] coll]
+    (Float. (String. (make-byte-array (take 26 data))))))
