@@ -61,12 +61,23 @@
       (cons [obj size] (lazy-seq (read-data (drop size data) (dec count)))))))
 
 (defdecoder :small-tuple [data]
-  (let [size            (unsign-int (first data))
+  (let [size            (bytes->data (take 1 data))
         body            (drop 1 data)
         objs-with-sizes (read-data body size)
         objs            (map first objs-with-sizes)
         size            (reduce #(+ %1 (second %2)) 0 objs-with-sizes)]
     [(vec objs) (inc size)]))
+
+(defdecoder :large-tuple [data]
+  (let [size            (bytes->data (take 4 data))
+        body            (drop 4 data)
+        objs-with-sizes (read-data body size)
+        objs            (map first objs-with-sizes)
+        size            (reduce #(+ %1 (second %2)) 0 objs-with-sizes)]
+    [(vec objs) (+ size 4)]))
+
+(defdecoder :nil [_]
+  ['() 0])
 
 (defn decode [coll]
   (let [[magic & data] coll]

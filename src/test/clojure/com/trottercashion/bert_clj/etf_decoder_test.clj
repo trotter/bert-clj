@@ -31,9 +31,15 @@
 
 (deftest should-decode-atom
   (test-round-trip 'trotter))
-(comment
- (deftest should-decode-small-tuple
-   (test-round-trip (vector 'hello 'world))))
+
+(deftest should-decode-small-tuple
+  (test-round-trip (vector 'hello 'world)))
 
 (deftest should-decode-tuple-with-inner-tuple
   (test-round-trip (vector (vector 2 3) 4)))
+
+(deftest should-decode-large-tuple
+  (test-round-trip (vec (take 256 (repeat 2)))))
+
+(deftest should-decode-empty-list
+  (test-round-trip '()))
