@@ -17,3 +17,6 @@
 
 (deftest should-decode-small-integer
   (test-round-trip 234))
+
+(deftest should-decode-big-integer
+  (test-round-trip 4000))
