@@ -43,3 +43,9 @@
 
 (deftest should-decode-empty-list
   (test-round-trip '()))
+
+(deftest should-decode-lists
+  (test-round-trip '(1 2 3)))
+
+(deftest should-decode-binary-lists
+  (test-round-trip (map byte '(1 2 3))))

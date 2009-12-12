@@ -79,6 +79,18 @@
 (defdecoder :nil [_]
   ['() 0])
 
+(defdecoder :list [data]
+  (let [size            (bytes->data (take 4 data))
+        body            (drop 4 data)
+        objs-with-sizes (read-data body size)
+        objs            (map first objs-with-sizes)
+        size            (reduce #(+ %1 (second %2)) 0 objs-with-sizes)]
+    [objs (+ size 4)]))
+
+(defdecoder :binary [data]
+  (let [size (bytes->data (take 4 data))]
+    [(take size (drop 4 data)) size]))
+
 (defn decode [coll]
   (let [[magic & data] coll]
     (if (= magic -125)
