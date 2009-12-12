@@ -49,3 +49,9 @@
 
 (deftest should-decode-binary-lists
   (test-round-trip (map byte '(1 2 3))))
+
+(deftest should-decode-small-bignums
+  (test-round-trip (bit-shift-left 1 31)))
+
+(deftest should-decode-large-bignums
+  (test-round-trip (bit-shift-left 1 (* 255 8))))

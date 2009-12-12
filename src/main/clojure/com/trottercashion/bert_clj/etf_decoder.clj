@@ -91,6 +91,18 @@
   (let [size (bytes->data (take 4 data))]
     [(take size (drop 4 data)) size]))
 
+(defdecoder :small-bignum [data]
+  (let [size (bytes->data (take 1 data))
+        sign (if (= (first (drop 1 data)) 0) 1 -1)]
+    [(* sign (bytes->data (reverse (take size (drop 2 data)))))
+     (+ size 2)]))
+
+(defdecoder :large-bignum [data]
+  (let [size (bytes->data (take 4 data))
+        sign (if (= (first (drop 4 data)) 0) 1 -1)]
+    [(* sign (bytes->data (reverse (take size (drop 5 data)))))
+     (+ size 5)]))
+
 (defn decode [coll]
   (let [[magic & data] coll]
     (if (= magic -125)
