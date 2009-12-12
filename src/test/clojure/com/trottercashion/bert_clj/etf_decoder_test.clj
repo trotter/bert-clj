@@ -11,6 +11,11 @@
 (deftest should-decode-string
   (test-round-trip "hi there, bob"))
 
+(deftest should-decode-with-length
+  (let [val "hi there, bob"]
+    (is (= (decoder/decode-with-length (rest (encoder/encode val)))
+           [val (+ (count val) 3)]))))
+
 (deftest should-decode-float
   (let [val 4000.0003]
     (is (> 0.001 (math/abs (- (decoder/decode (encoder/encode val)) val))))))
@@ -23,3 +28,12 @@
 
 (deftest should-decode-negative-big-integer
   (test-round-trip -1))
+
+(deftest should-decode-atom
+  (test-round-trip 'trotter))
+(comment
+ (deftest should-decode-small-tuple
+   (test-round-trip (vector 'hello 'world))))
+
+(deftest should-decode-tuple-with-inner-tuple
+  (test-round-trip (vector (vector 2 3) 4)))
