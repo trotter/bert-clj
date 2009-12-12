@@ -10,13 +10,13 @@
   (is (= (encoder/encode true) ['bert 'true]))
   (is (= (encoder/encode false) ['bert 'false])))
 
-(deftest should-encode-map
+(deftest should-encode-dict
   (let [expected ['bert 'dict '(["hello" "mom"] [:nine 7])]]
     (is (= (encoder/encode {"hello" "mom" :nine 7}) expected))))
 
 (deftest should-encode-time
   (let [milliseconds 12345678912345
-        expected ['bert 'dict 12345 678912 345000]]
+        expected ['bert 'time 12345 678912 345000]]
     (is (= (encoder/encode (java.util.Date. milliseconds)) expected))))
 
 ;; Mapping of erlang to java regexp options is in order below

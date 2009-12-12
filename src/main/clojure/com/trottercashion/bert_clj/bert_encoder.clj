@@ -51,7 +51,7 @@
         seconds      (quot milliseconds 1000)
         megaseconds  (quot seconds 1000000)
         microseconds (* (rem milliseconds 1000) 1000)]
-    (vector 'bert 'dict megaseconds (rem seconds 1000000) microseconds)))
+    (vector 'bert 'time megaseconds (rem seconds 1000000) microseconds)))
 
 (defmethod encode :regex [regex]
   (vector 'bert 'regex (extract-regex-pattern regex) (extract-regex-options regex)))
