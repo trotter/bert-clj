@@ -58,7 +58,7 @@
   (if (< count 1)
     nil
     (let [[obj size] (decode-with-length data)]
-      (cons [obj size] (read-data (drop size data) (dec count))))))
+      (cons [obj size] (lazy-seq (read-data (drop size data) (dec count)))))))
 
 (defdecoder :small-tuple [data]
   (let [size            (unsign-int (first data))
