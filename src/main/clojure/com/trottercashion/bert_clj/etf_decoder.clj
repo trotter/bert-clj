@@ -39,4 +39,8 @@
   (bytes->data (take 1 data)))
 
 (defdecoder :big-int [data]
-  (bytes->data (take 4 data)))
+  (let [unsigned (bytes->data (take 4 data))
+        biggest-signed 2147483647]
+    (if (> unsigned biggest-signed)
+      (- unsigned (bit-shift-left 1 32))
+      unsigned)))

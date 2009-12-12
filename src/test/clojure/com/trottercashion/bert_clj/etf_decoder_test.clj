@@ -20,3 +20,6 @@
 
 (deftest should-decode-big-integer
   (test-round-trip 4000))
+
+(deftest should-decode-negative-big-integer
+  (test-round-trip -1))
