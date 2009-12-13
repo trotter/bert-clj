@@ -1,4 +1,4 @@
-bert-clj is an implementation of "mojombo's bert":http://github.com/mojombo/bert/ in clojure. It is currently not yet ready for use.
+bert-clj is an implementation of "mojombo's bert":http://github.com/mojombo/bert/ in clojure. It is currently ready for use, but not tested in a real environment. Please try it out and file bug reports. I'm happy to fix anything that's wrong with it.
 
 h2. Author
 
