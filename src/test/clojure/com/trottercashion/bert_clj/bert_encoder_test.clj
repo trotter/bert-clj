@@ -21,10 +21,10 @@
 
 ;; Mapping of erlang to java regexp options is in order below
 ;; Java default for regex is to match \r\n, whereas erlang is \n, so we're leaving off the ?d flag in this test
-(deftest should-encode-regex-with-crlf-line-endings
+(deftest should-encode-regex-with-lf-line-endings
   (let [expected ['bert 'regex "c(a*)t$" '(caseless extended multiline dotall unicode)]]
     (is (= (encoder/encode #"(?ixmsud)c(a*)t$") expected))))
 
-(deftest should-encode-regex-with-lf-endings
+(deftest should-encode-regex-with-crlf-endings
   (let [expected ['bert 'regex "c(a*)t$", '([newline anycrlf])]]
     (is (= (encoder/encode #"c(a*)t$") expected))))

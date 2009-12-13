@@ -18,3 +18,21 @@
 
 (def *codes->etf-types*
   (zipmap (vals *etf-types*) (keys *etf-types*)))
+
+(def *regex-flags*
+  {
+    java.util.regex.Pattern/CASE_INSENSITIVE 'caseless
+    java.util.regex.Pattern/COMMENTS         'extended
+    java.util.regex.Pattern/MULTILINE        'multiline
+    java.util.regex.Pattern/DOTALL           'dotall
+    java.util.regex.Pattern/UNICODE_CASE     'unicode
+  })
+
+(def *symbols->regex-flags*
+     (zipmap (vals *regex-flags*) (keys *regex-flags*)))
+
+(def *inverse-regex-flags*
+  { java.util.regex.Pattern/UNIX_LINES       ['newline 'anycrlf] })
+
+(def *symbols->inverse-regex-flags*
+     (zipmap (vals *inverse-regex-flags*) (keys *inverse-regex-flags*)))

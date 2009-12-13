@@ -1,4 +1,5 @@
-(ns com.trottercashion.bert-clj.bert-encoder)
+(ns com.trottercashion.bert-clj.bert-encoder
+  (:use com.trottercashion.bert-clj.utility))
 
 (def *type-mappings*
   { nil                     :nil
@@ -8,18 +9,6 @@
 (def *type-finders*
   { clojure.lang.IPersistentMap :dictionary
     java.util.Date              :time})
-
-(def *regex-flags*
-  {
-    java.util.regex.Pattern/CASE_INSENSITIVE 'caseless
-    java.util.regex.Pattern/COMMENTS         'extended
-    java.util.regex.Pattern/MULTILINE        'multiline
-    java.util.regex.Pattern/DOTALL           'dotall
-    java.util.regex.Pattern/UNICODE_CASE     'unicode
-  })
-
-(def *inverse-regex-flags*
-  { java.util.regex.Pattern/UNIX_LINES       ['newline 'anycrlf] })
 
 (defn encoding-type [obj]
   (or (*type-mappings* (type obj))
