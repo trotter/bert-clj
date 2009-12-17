@@ -1,7 +1,7 @@
 (ns com.trottercashion.bert-clj.etf-encoder
   (:use com.trottercashion.bert-clj.utility)
   (:require [clojure.contrib.math :as math]
-            [com.trottercashion.bert-clj.bert :as bert]))
+            [com.trottercashion.bert-clj.bert-encoder :as bert-encoder]))
 
 (declare encode-without-magic)
 
@@ -86,5 +86,5 @@
       (coerce :small-bignum (extract-bytes size 1) (extract-bytes sign 1) bytes))))
 
 (defn encode-without-magic [o]
-  (rest (bert/encode o)))
+  (rest (encode (bert-encoder/encode o))))
 
