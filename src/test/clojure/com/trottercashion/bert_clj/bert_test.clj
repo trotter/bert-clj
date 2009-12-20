@@ -25,3 +25,7 @@
 
 (deftest should-roundtrip-nil-in-a-vector
   (test-round-trip [nil]))
+
+(deftest should-decode-a-seq-of-berts
+  (is (= (bert/decode-seq (concat (bert/encode 5) (bert/encode 7)))
+         '(5 7))))

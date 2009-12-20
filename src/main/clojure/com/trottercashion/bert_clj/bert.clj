@@ -6,6 +6,11 @@
 (defn encode [obj]
   (etf-encoder/encode (bert-encoder/encode obj)))
 
+(defn decode-seq [coll]
+  (if (not (empty? coll))
+    (let [[obj size] (etf-decoder/decode-with-size coll)]
+      (cons obj (lazy-seq (decode-seq (drop size coll)))))))
+
 (defn decode [coll]
-  (etf-decoder/decode coll))
+  (first (decode-seq coll)))
 

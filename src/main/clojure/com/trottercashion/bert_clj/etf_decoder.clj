@@ -103,8 +103,12 @@
     [(* sign (bytes->data (reverse (take size (drop 5 data)))))
      (+ size 5)]))
 
-(defn decode [coll]
+(defn decode-with-size [coll]
   (let [[magic & data] coll]
     (if (= magic -125)
-      (first (decode-with-length data))
+      (let [[obj size] (decode-with-length data)]
+        [obj (inc size)])
       (throw "Unknown magic bit: we only handle 131 (-125 when signed)"))))
+
+(defn decode [coll]
+  (first (decode-with-size coll)))

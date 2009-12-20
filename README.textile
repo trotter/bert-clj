@@ -6,23 +6,21 @@ There are two ways to use bert-clj. One, you can just add bert-clj/src/main/cloj
 
 <pre>
 >  (require '[com.trottercashion.bert-clj.bert :as bert])
->  (bert/encode 72)            ;; => (-125 97 72)
->  (bert/decode '(-125 97 72)) ;; => 72
+>  (bert/encode 72)                           ;; => (-125 97 72)
+>  (bert/decode '(-125 97 72))                ;; => 72
+>  (bert/decode-seq '(-125 97 72 -125 97 53)) ;; => (72 53)
 </pre>
 
-Alternately, you can use maven to assemble a jar that can then be added to your classpath. On the command line, do the following:
+Alternatively, you can use maven to assemble a jar that can then be added to your classpath. On the command line, do the following:
 
 <pre>
 $ mvn assembly:assembly
 $ java -cp target/bert-clj-1.0-jar-with-dependencies.jar clojure.lang.Repl
 >  (require '[com.trottercashion.bert-clj.bert :as bert])
->  (bert/encode 72)            ;; => (-125 97 72)
->  (bert/decode '(-125 97 72)) ;; => 72
+>  (bert/encode 72)                           ;; => (-125 97 72)
+>  (bert/decode '(-125 97 72))                ;; => 72
+>  (bert/decode-seq '(-125 97 72 -125 97 53)) ;; => (72 53)
 </pre>
-
-h2. Known Issues
-
-bert/decode will currently only decode one bert at a time. If you'd like to add stream support, please do so and send me a pull request. Otherwise, I may get to stream support sometime in the next month or two.
 
 h2. Author
 
