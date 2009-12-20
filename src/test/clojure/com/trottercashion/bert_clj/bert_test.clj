@@ -22,3 +22,6 @@
 
 (deftest should-roundtrip-nil
   (test-round-trip nil))
+
+(deftest should-roundtrip-nil-in-a-vector
+  (test-round-trip [nil]))

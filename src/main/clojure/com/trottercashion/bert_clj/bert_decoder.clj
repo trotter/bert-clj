@@ -30,4 +30,5 @@
   (let [[magic type & data] coll]
     (if (= magic :bert)
       (decoder type data)
-      (throw (str "Tuple is not a bert, magic:" magic)))))
+      coll)))
+

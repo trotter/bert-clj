@@ -1,5 +1,6 @@
 (ns com.trottercashion.bert-clj.etf-decoder
-  (:use com.trottercashion.bert-clj.utility))
+  (:use com.trottercashion.bert-clj.utility)
+  (:require [com.trottercashion.bert-clj.bert-decoder :as bert-decoder]))
 
 (defn unsign-int [i]
   (if (< i 0)
@@ -49,7 +50,6 @@
        unsigned)
      4]))
 
-;; should we go to atom or keyword here?
 (defdecoder :atom [data]
   (let [ret (bytes->string-with-length data)]
     [(keyword (first ret)) (second ret)]))
@@ -66,7 +66,7 @@
         objs-with-sizes (read-data body size)
         objs            (map first objs-with-sizes)
         size            (reduce #(+ %1 (second %2)) 0 objs-with-sizes)]
-    [(vec objs) (inc size)]))
+    [(bert-decoder/decode (vec objs)) (inc size)]))
 
 (defdecoder :large-tuple [data]
   (let [size            (bytes->data (take 4 data))
@@ -74,7 +74,7 @@
         objs-with-sizes (read-data body size)
         objs            (map first objs-with-sizes)
         size            (reduce #(+ %1 (second %2)) 0 objs-with-sizes)]
-    [(vec objs) (+ size 4)]))
+    [(bert-decoder/decode (vec objs)) (+ size 4)]))
 
 (defdecoder :nil [_]
   ['() 0])
