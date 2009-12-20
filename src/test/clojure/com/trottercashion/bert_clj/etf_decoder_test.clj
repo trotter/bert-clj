@@ -30,10 +30,10 @@
   (test-round-trip -1))
 
 (deftest should-decode-atom
-  (test-round-trip 'trotter))
+  (test-round-trip :trotter))
 
 (deftest should-decode-small-tuple
-  (test-round-trip (vector 'hello 'world)))
+  (test-round-trip (vector :hello :world)))
 
 (deftest should-decode-tuple-with-inner-tuple
   (test-round-trip (vector (vector 2 3) 4)))

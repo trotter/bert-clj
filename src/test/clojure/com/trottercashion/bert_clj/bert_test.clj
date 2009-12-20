@@ -19,3 +19,6 @@
 
 (deftest should-decode-complex-types
   (test-round-trip {"one key" "two key" "red key" "blue key"}))
+
+(deftest should-roundtrip-nil
+  (test-round-trip nil))

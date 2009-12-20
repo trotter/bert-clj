@@ -4,14 +4,14 @@
 
 (defmulti decoder (fn [type data] type))
 
-(defmethod decoder 'nil   [type data] nil)
-(defmethod decoder 'true  [type data] true)
-(defmethod decoder 'false [type data] false)
+(defmethod decoder :nil   [type data] nil)
+(defmethod decoder :true  [type data] true)
+(defmethod decoder :false [type data] false)
 
-(defmethod decoder 'dict [type [pairs]]
+(defmethod decoder :dict [type [pairs]]
   (zipmap (map first pairs) (map second pairs)))
 
-(defmethod decoder 'time [type [mega seconds micro]]
+(defmethod decoder :time [type [mega seconds micro]]
   (java.util.Date. (+ (* mega 1000000000)
                       (* seconds 1000)
                       (/ micro 1000))))
@@ -23,12 +23,11 @@
     (reduce bit-or (concat (map #(*symbols->regex-flags* %) options)
                            inverse-options))))
 
-(defmethod decoder 'regex [type [source options]]
+(defmethod decoder :regex [type [source options]]
   (java.util.regex.Pattern/compile source (or (regex-flags options) 0)))
 
 (defn decode [coll]
   (let [[magic type & data] coll]
-    (if (= magic 'bert)
+    (if (= magic :bert)
       (decoder type data)
       (throw (str "Tuple is not a bert, magic:" magic)))))
-

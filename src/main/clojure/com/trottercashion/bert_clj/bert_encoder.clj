@@ -26,23 +26,23 @@
 (defmulti encode #(encoding-type %))
 
 (defmethod encode :nil [_]
-  ['bert 'nil])
+  [:bert :nil])
 
 (defmethod encode :boolean [bool]
-  (let [sym (if bool 'true 'false)]
-    ['bert sym]))
+  (let [sym (if bool :true :false)]
+    [:bert sym]))
 
 (defmethod encode :dictionary [dict]
-  (vector 'bert 'dict (map vec dict)))
+  (vector :bert :dict (map vec dict)))
 
 (defmethod encode :time [time]
   (let [milliseconds (.getTime time)
         seconds      (quot milliseconds 1000)
         megaseconds  (quot seconds 1000000)
         microseconds (* (rem milliseconds 1000) 1000)]
-    (vector 'bert 'time megaseconds (rem seconds 1000000) microseconds)))
+    (vector :bert :time megaseconds (rem seconds 1000000) microseconds)))
 
 (defmethod encode :regex [regex]
-  (vector 'bert 'regex (extract-regex-pattern regex) (extract-regex-options regex)))
+  (vector :bert :regex (extract-regex-pattern regex) (extract-regex-options regex)))
 
 (defmethod encode :default [obj] obj)

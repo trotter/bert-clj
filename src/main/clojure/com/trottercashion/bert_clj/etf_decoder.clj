@@ -52,7 +52,7 @@
 ;; should we go to atom or keyword here?
 (defdecoder :atom [data]
   (let [ret (bytes->string-with-length data)]
-    [(symbol (first ret)) (second ret)]))
+    [(keyword (first ret)) (second ret)]))
 
 (defn read-data [data count]
   (if (< count 1)
