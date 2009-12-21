@@ -108,7 +108,7 @@
     (if (= magic -125)
       (let [[obj size] (decode-with-length data)]
         [obj (inc size)])
-      (throw "Unknown magic bit: we only handle 131 (-125 when signed)"))))
+      (throw (Exception. "Unknown magic bit: we only handle 131 (-125 when signed)")))))
 
 (defn decode [coll]
   (first (decode-with-size coll)))
