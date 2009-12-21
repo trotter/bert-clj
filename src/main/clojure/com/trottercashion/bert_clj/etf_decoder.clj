@@ -80,16 +80,17 @@
   ['() 0])
 
 (defdecoder :list [data]
-  (let [size            (bytes->data (take 4 data))
+  (let [count           (bytes->data (take 4 data))
         body            (drop 4 data)
-        objs-with-sizes (read-data body size)
+        objs-with-sizes (read-data body count)
         objs            (map first objs-with-sizes)
         size            (reduce #(+ %1 (second %2)) 0 objs-with-sizes)]
-    [objs (+ size 4)]))
+    ;;; we're +5 here because of the size bit and the nil terminator at the end
+    [objs (+ size 5)]))
 
 (defdecoder :binary [data]
   (let [size (bytes->data (take 4 data))]
-    [(take size (drop 4 data)) size]))
+    [(take size (drop 4 data)) (+ size 4)]))
 
 (defdecoder :small-bignum [data]
   (let [size (bytes->data (take 1 data))

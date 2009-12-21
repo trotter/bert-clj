@@ -6,15 +6,11 @@
             [clojure.contrib.math :as math]))
 
 (defn test-round-trip [val]
-  (is (= (decoder/decode (encoder/encode val)) val)))
+  (let [encoded (encoder/encode val)]
+    (is (= (decoder/decode-with-size encoded) [val (count encoded)]))))
 
 (deftest should-decode-string
   (test-round-trip "hi there, bob"))
-
-(deftest should-decode-with-length
-  (let [val "hi there, bob"]
-    (is (= (decoder/decode-with-length (rest (encoder/encode val)))
-           [val (+ (count val) 3)]))))
 
 (deftest should-decode-float
   (let [val 4000.0003]

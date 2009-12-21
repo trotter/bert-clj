@@ -13,4 +13,3 @@
 
 (defn decode [coll]
   (first (decode-seq coll)))
-
